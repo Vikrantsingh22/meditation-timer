@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Meditate</h1>
+        <div class="timer-display">00:00:00</div>
+        <div class="inputfortime">
+            <label for="duration-input">Timer duration (in minutes):</label>
+            <!-- we are going the cap the input value we are going to accept the time in minutes and minimum time is 1 min and maximum is 2 hour -->
+        <input type="number" id="duration-input" name="duration-input" min="1" max="120" step="1" value="10">
+        </div>
+        <button id="start-button">Start</button>
+        <button id="stop-button">Stop</button>
+    </div>
+
+    <script>
+        var startButton = document.getElementById('start-button');
+        var stopButton = document.getElementById('stop-button');
+        var timerInterval;
+        var duration = 0;
+      // using the event listener to call the operations using the call back function
+        startButton.addEventListener('click', function() {
+            startTimer();
+        });
+
+        stopButton.addEventListener('click', function() {
+            stopTimer();
+        });
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            duration = document.getElementById('duration-input').value;
+            var timerDisplay = document.querySelector('.timer-display');
+            var startTime = new Date().getTime();
+            var endTime = startTime + duration * 60 * 1000;
+
+            timerInterval = setInterval(function() {
+                var now = new Date().getTime();
+                var timeRemaining = Math.max(0, endTime - now);
+                var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                var display = '';
+// here we are using conditionals to make the decision
+                if (hours < 10) {
+                    display += '0' + hours + ':';
+                } else {
+                    display += hours + ':';
+                }
+
+                if (minutes < 10) {
+                    display += '0' + minutes + ':';
+                } else {
+                    display += minutes + ':';
+                }
+
+                if (seconds < 10) {
+                    display += '0' + seconds;
+                } else {
+                    display += seconds;
+                }
+
+                timerDisplay.innerHTML = display;
+
+                if (timeRemaining === 0) {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            duration = 0;
+            document.querySelector('.timer-display').innerHTML = '00:00:00';
+        }
+    </script>
+</body>
+</html>
+
+
